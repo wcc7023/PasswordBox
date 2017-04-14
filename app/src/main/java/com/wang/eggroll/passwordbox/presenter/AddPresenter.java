@@ -3,9 +3,11 @@ package com.wang.eggroll.passwordbox.presenter;
 import android.content.Context;
 import android.util.Log;
 
+import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.instance.PasswordItemList;
 import com.wang.eggroll.passwordbox.model.MyOrmHelper;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
+import com.wang.eggroll.passwordbox.utils.AESHelper;
 import com.wang.eggroll.passwordbox.view.IAddActivity;
 import com.wang.eggroll.passwordbox.view.MainActivity;
 
@@ -43,7 +45,8 @@ public class AddPresenter implements IAddPresenter {
         }else {
             PasswordItem passwordItem = new PasswordItem();
             passwordItem.setItem(name);
-            passwordItem.setPassword(pwdBeforeEncrypt);
+            String pwdAfterEncrypt = AESHelper.encrypt(pwdBeforeEncrypt, App.getSharedPreferences().getString("PASSWORD", "NULL"));
+            passwordItem.setPassword(pwdAfterEncrypt);
             MyOrmHelper.getInstance(context).addItem(passwordItem);
             addActivity.onDataChangeed();
             addActivity.onAddSuccess();
@@ -62,6 +65,9 @@ public class AddPresenter implements IAddPresenter {
         else if (passwordItem.getPassword().equals("")) {
             addActivity.onUpdateFailed("密码不能为空");
         } else {
+            String pwdBeforeEncrypt = passwordItem.getPassword();
+            String pwdAfterEncrypt = AESHelper.encrypt(pwdBeforeEncrypt, App.getSharedPreferences().getString("PASSWORD", "NULL"));
+            passwordItem.setPassword(pwdAfterEncrypt);
             MyOrmHelper.getInstance(context).updateItem(passwordItem);
             addActivity.onDataChangeed();
             addActivity.onUpdateSuccess();

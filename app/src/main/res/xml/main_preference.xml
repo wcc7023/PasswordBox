@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="stealth_mode"
+        android:title="是否隐藏解锁路径"
+        android:defaultValue="true"/>
+
+    <Preference
+        android:key="change_password"
+        android:title="更换解锁密码"/>
+</PreferenceScreen>

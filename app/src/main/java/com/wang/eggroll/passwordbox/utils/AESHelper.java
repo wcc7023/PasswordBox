@@ -64,6 +64,7 @@ public class AESHelper {
     }
 
     ///** 加密(结果进行Base64变换) **/
+    //content是用户输入的密码，password是MD5之后的锁屏密码
     public static String encrypt(String content, String password) {
         byte[] data = null;
         try {

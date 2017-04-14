@@ -13,6 +13,7 @@ import com.wang.eggroll.passwordbox.model.PasswordItem;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,8 +24,19 @@ public class ShareListViewAdapter extends BaseAdapter {
 
     List<PasswordItem> passwordItemList;
 
+    public static HashMap<Integer, Boolean> getIsSelect() {
+        return isSelect;
+    }
+
+    private static HashMap<Integer, Boolean> isSelect = new HashMap<>();
+
     public ShareListViewAdapter(List<PasswordItem> passwordItemList) {
         this.passwordItemList = passwordItemList;
+
+        //initHashMap
+        for (int i = 0; i < passwordItemList.size(); i++) {
+           isSelect.put(i, false);
+        }
     }
 
     @Override
@@ -43,7 +55,7 @@ public class ShareListViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -64,7 +76,18 @@ public class ShareListViewAdapter extends BaseAdapter {
         PasswordItem passwordItem = PasswordItemList.getInstance().get(position);
 
         viewHolder.getName().setText(passwordItem.getItem());
-
+        viewHolder.getCheckBox().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSelect.get(position)){
+                    isSelect.put(position, false);
+                }else {
+                    isSelect.put(position, true);
+                }
+                notifyDataSetChanged();
+            }
+        });
+        viewHolder.getCheckBox().setChecked(isSelect.get(position));
         return convertView;
     }
 

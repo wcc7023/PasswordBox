@@ -29,6 +29,7 @@ public class UpdateDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_update, null);
         builder.setView(view);
 
+        //TODO:passwordItem通过传值的形式进来
         final PasswordItem currentPasswordItem = ((MainActivity)getActivity()).getPasswordItem();
         final AddPresenter presenter = ((MainActivity)getActivity()).getAddPresenter();
 

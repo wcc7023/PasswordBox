@@ -11,12 +11,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +29,8 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,7 +46,7 @@ import com.wang.eggroll.passwordbox.presenter.AddPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IAddActivity{
+public class MainActivity extends AppCompatActivity implements IAddActivity,SearchView.OnQueryTextListener{
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
     ListViewAdapter adapter;
     AddPresenter addPresenter;
     PasswordItem currentPasswordItem;
+    SearchView searchView;
 //    boolean isHide = false;
 
     @Override
@@ -66,9 +72,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.btn_search:
-                        Toast.makeText(getApplicationContext(), "搜索", Toast.LENGTH_SHORT).show();
-                        break;
                     case R.id.btn_add:
                         AddDialog addDialog = new AddDialog();
                         addDialog.show(getSupportFragmentManager(), "add");
@@ -94,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
                         drawerLayout.closeDrawers();
                         return true;
                     case R.id.item_set:
+                        Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intentSettings);
                         drawerLayout.closeDrawers();
                         return true;
                 }
@@ -137,12 +142,13 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
 
 
         PasswordItemList.getInstance().addAll(addPresenter.queryAllItem());
-        Log.d("itemFirstInDB", MyOrmHelper.getInstance(this).queryAll().get(0).getPassword());
+//        Log.d("itemFirstInDB", MyOrmHelper.getInstance(this).queryAll().get(0).getPassword());
 
 //        passwordItemList = addPresenter.queryAllItem();
         adapter = new ListViewAdapter(PasswordItemList.getInstance());
         listView = (ListView) findViewById(R.id.pwd_list);
         listView.setAdapter(adapter);
+        listView.setTextFilterEnabled(true);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -170,7 +176,13 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.bar_activity_main, menu);
-        return super.onCreateOptionsMenu(menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint("搜索");
+        return true;
+//        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -245,5 +257,23 @@ public class MainActivity extends AppCompatActivity implements IAddActivity{
     protected void onDestroy() {
         PasswordItemList.getInstance().clear();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (adapter instanceof Filterable){
+            Filter filter = adapter.getFilter();
+            if (newText == null || newText.length() == 0){
+                filter.filter(null);
+            }else {
+                filter.filter(newText);
+            }
+        }
+        return true;
     }
 }
