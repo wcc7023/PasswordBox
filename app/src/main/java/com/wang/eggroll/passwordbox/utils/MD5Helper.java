@@ -12,6 +12,8 @@ import me.zhanghai.android.patternlock.PatternView;
  */
 
 public class MD5Helper {
+
+    //TODO:这里涉及到View层的东西，不应该出现，应该在Presenter完成View-->Byte的转换
     public static String patternToMD5String(List<PatternView.Cell> pattern){
         byte[] patternToByte = PatternUtils.patternToBytes(pattern);
         String md5 = null;

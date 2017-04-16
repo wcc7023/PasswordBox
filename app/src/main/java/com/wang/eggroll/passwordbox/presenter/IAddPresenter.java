@@ -9,8 +9,10 @@ import java.util.List;
  */
 
 public interface IAddPresenter {
-    void addToDatabase(String name, String pwdAfterEncrypt);
+    void addToDatabase(String name, String pwdBeforeEncrypt);
     void updateItem(PasswordItem passwordItem);
     void removeItem(PasswordItem passwordItem);
     List<PasswordItem> queryAllItem();
+    void onBackFromGallery(String result);
+    void addFromQRCode(String result);
 }

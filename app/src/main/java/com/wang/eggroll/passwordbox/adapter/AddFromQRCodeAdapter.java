@@ -1,5 +1,6 @@
 package com.wang.eggroll.passwordbox.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,45 +9,41 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.wang.eggroll.passwordbox.R;
-import com.wang.eggroll.passwordbox.instance.PasswordItemList;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by eggroll on 02/04/2017.
+ * Created by eggroll on 15/04/2017.
  */
 
-public class ShareListViewAdapter extends BaseAdapter {
+public class AddFromQRCodeAdapter extends BaseAdapter {
 
-    List<PasswordItem> passwordItemList;
+    List<PasswordItem> sharedList;
 
-    public static HashMap<Integer, Boolean> getIsSelect() {
+    HashMap<Integer, Boolean> isSelect = new HashMap<>();
+
+    public HashMap<Integer, Boolean> getIsSelect() {
         return isSelect;
     }
 
-    private static HashMap<Integer, Boolean> isSelect = new HashMap<>();
+    public AddFromQRCodeAdapter(List<PasswordItem> sharedList) {
+        this.sharedList = sharedList;
 
-    public ShareListViewAdapter(List<PasswordItem> passwordItemList) {
-        this.passwordItemList = passwordItemList;
-
-        //initHashMap
-        for (int i = 0; i < passwordItemList.size(); i++) {
-           isSelect.put(i, false);
+        for (int i = 0; i < sharedList.size(); i++) {
+            isSelect.put(i, false);
         }
     }
 
     @Override
     public int getCount() {
-        return PasswordItemList.getInstance().size();
+        return sharedList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return PasswordItemList.getInstance().get(position);
+        return sharedList.get(position);
     }
 
     @Override
@@ -61,21 +58,18 @@ public class ShareListViewAdapter extends BaseAdapter {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         if (convertView == null){
-            convertView = layoutInflater.inflate(R.layout.share_list_item, null);
+            convertView = layoutInflater.inflate(R.layout.add_list_item, null);
 
-            TextView textView = (TextView) convertView.findViewById(R.id.share_list_item_name);
-            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+            TextView name = (TextView) convertView.findViewById(R.id.name_add_from_qrcode);
+            CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox_add_from_qrcode);
 
-            viewHolder = new ViewHolder(textView, checkBox);
-
+            viewHolder = new ViewHolder(name, checkBox);
             convertView.setTag(viewHolder);
-        }else{
-            viewHolder = (ViewHolder) convertView.getTag();
+        }else {
+            viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        PasswordItem passwordItem = PasswordItemList.getInstance().get(position);
-
-        viewHolder.getName().setText(passwordItem.getItem());
+        viewHolder.getName().setText(sharedList.get(position).getItem());
         viewHolder.getCheckBox().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +82,7 @@ public class ShareListViewAdapter extends BaseAdapter {
             }
         });
         viewHolder.getCheckBox().setChecked(isSelect.get(position));
+
         return convertView;
     }
 
@@ -95,17 +90,17 @@ public class ShareListViewAdapter extends BaseAdapter {
         TextView name;
         CheckBox checkBox;
 
-        private ViewHolder(TextView name, CheckBox checkBox) {
+        public ViewHolder(TextView name, CheckBox checkBox) {
             this.name = name;
             this.checkBox = checkBox;
         }
 
-        private CheckBox getCheckBox() {
-            return checkBox;
+        public TextView getName() {
+            return name;
         }
 
-        private TextView getName() {
-            return name;
+        public CheckBox getCheckBox() {
+            return checkBox;
         }
     }
 }

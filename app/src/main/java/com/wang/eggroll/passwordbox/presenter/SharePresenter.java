@@ -7,12 +7,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.instance.PasswordItemList;
+import com.wang.eggroll.passwordbox.instance.SelectedList;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.view.IShareActivity;
 import com.wang.eggroll.passwordbox.view.ShareActivity;
@@ -49,10 +51,31 @@ public class SharePresenter implements ISharePresenter {
         HashMap<Integer, Boolean> hashMap = shareActivity.getAdapter().getIsSelect();
         for (int i = 0; i < hashMap.size(); i++) {
             if (hashMap.get(i)){
-                selectedList.add(PasswordItemList.getInstance().get(i));
+//                selectedList.add(PasswordItemList.getInstance().get(i));
+                PasswordItem temp = PasswordItemList.getInstance().get(i);
+                PasswordItem selectItem = new PasswordItem();
+                selectItem.setItem(temp.getItem());
+                selectItem.setPassword(temp.getPassword());
+                selectedList.add(selectItem);
             }
         }
-        String JSONString = JSON.toJSONString(selectedList);
+        SelectedList list = new SelectedList();
+        list.setSelectedPasswordItemList(selectedList);
+        list.setPassword(App.getSharedPreferences().getString("PASSWORD", "NULL"));
+        String JSONString = JSON.toJSONString(list);
+
+
+
+
+        Log.e("onCreateQRCOde", list.getPassword());
+        SelectedList selectedList1 = JSON.parseObject(JSONString, SelectedList.class);
+        String password = selectedList1.getPassword();
+        Log.e("onCreateQRCOde", password);
+
+
+
+
+
         Bitmap barCode = CodeUtils.createImage(JSONString, 400, 400, null);
         shareActivity.onBarcodeCreated(barCode);
     }
@@ -64,16 +87,17 @@ public class SharePresenter implements ISharePresenter {
             appDir.mkdir();
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd.HHmmss");
         Date currentData = new Date(System.currentTimeMillis());
 
-        String fileName = "密钥分享*" + simpleDateFormat.format(currentData) + ".jpg";
+        String fileName = simpleDateFormat.format(currentData) + ".jpg";
         File file = new File(appDir, fileName);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
             fileOutputStream.flush();
             fileOutputStream.close();
+            Toast.makeText(App.getContext(), "成功保存图片到：" + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -88,6 +112,5 @@ public class SharePresenter implements ISharePresenter {
 
         App.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 
-        Toast.makeText(App.getContext(), "成功保存图片到：" + file.getAbsolutePath() + fileName, Toast.LENGTH_SHORT).show();
     }
 }

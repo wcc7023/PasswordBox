@@ -1,16 +1,24 @@
 package com.wang.eggroll.passwordbox.presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.instance.PasswordItemList;
+import com.wang.eggroll.passwordbox.instance.SelectedList;
 import com.wang.eggroll.passwordbox.model.MyOrmHelper;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.utils.AESHelper;
+import com.wang.eggroll.passwordbox.utils.ImageHelper;
 import com.wang.eggroll.passwordbox.view.IAddActivity;
 import com.wang.eggroll.passwordbox.view.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +53,7 @@ public class AddPresenter implements IAddPresenter {
         }else {
             PasswordItem passwordItem = new PasswordItem();
             passwordItem.setItem(name);
+            Log.e("encryptPassword", App.getSharedPreferences().getString("PASSWORD", "NULL"));
             String pwdAfterEncrypt = AESHelper.encrypt(pwdBeforeEncrypt, App.getSharedPreferences().getString("PASSWORD", "NULL"));
             passwordItem.setPassword(pwdAfterEncrypt);
             MyOrmHelper.getInstance(context).addItem(passwordItem);
@@ -85,4 +94,21 @@ public class AddPresenter implements IAddPresenter {
     public List<PasswordItem> queryAllItem() {
         return MyOrmHelper.getInstance(context).queryAll();
     }
+
+    @Override
+    public void onBackFromGallery(String result) {
+
+    }
+
+    @Override
+    public void addFromQRCode(String result) {
+        SelectedList list = JSON.parseObject(result, SelectedList.class);
+        List<PasswordItem> sharedItemList = list.getSelectedPasswordItemList();
+        String oldPassword = list.getPassword();
+        Log.e("oldPassword", oldPassword);
+        addActivity.onListCreated(sharedItemList, oldPassword);
+        Log.e("selectedList", sharedItemList.get(0).getItem());
+    }
+
+
 }

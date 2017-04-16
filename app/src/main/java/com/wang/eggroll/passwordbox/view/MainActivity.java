@@ -1,10 +1,13 @@
 package com.wang.eggroll.passwordbox.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -35,18 +38,31 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.uuzuche.lib_zxing.decoding.Intents;
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.adapter.ListViewAdapter;
 import com.wang.eggroll.passwordbox.instance.PasswordItemList;
+import com.wang.eggroll.passwordbox.instance.SelectedList;
 import com.wang.eggroll.passwordbox.model.MyOrmHelper;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.presenter.AddPresenter;
+import com.wang.eggroll.passwordbox.utils.ImageHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IAddActivity,SearchView.OnQueryTextListener{
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class MainActivity extends AppCompatActivity implements IAddActivity,SearchView.OnQueryTextListener,EasyPermissions.PermissionCallbacks{
+
+    int SCAN_REQUEST = 2;
+    int REQUEST_CAMERA_PERMS = 102;
+    int IMAGE_REQUEST = 3;
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -54,9 +70,11 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     FloatingActionButton fab;
     ListView listView;
     ListViewAdapter adapter;
-    AddPresenter addPresenter;
+    static AddPresenter addPresenter;
     PasswordItem currentPasswordItem;
     SearchView searchView;
+    List<PasswordItem> sharedItemList = new ArrayList<>();
+    String oldPassword = null;
 //    boolean isHide = false;
 
     @Override
@@ -89,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
                 switch (item.getItemId()){
                     case R.id.item_scan:
+                        getCameraPermission();
                         drawerLayout.closeDrawers();
                         return true;
                     case R.id.item_share:
@@ -127,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
+                        Toast.makeText(App.getContext(), "DOWN", Toast.LENGTH_SHORT).show();
                         App.setHide(false);
                         adapter.notifyDataSetChanged();
                         break;
@@ -222,6 +242,22 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
         return this.adapter;
     }
 
+    @Override
+    public void onListCreated(List<PasswordItem> passwordItemList, String oldPassword) {
+        this.sharedItemList = passwordItemList;
+        this.oldPassword = oldPassword;
+        Log.e("onListCreate", this.oldPassword);
+
+
+        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
+        dialog.show(getSupportFragmentManager(), "addFromQRCode");
+    }
+
+    public String getOldPassword() {
+        Log.e("getOldPassword", oldPassword);
+        return oldPassword;
+    }
+
     public AddPresenter getAddPresenter(){
         return addPresenter;
     }
@@ -275,5 +311,70 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
             }
         }
         return true;
+    }
+
+
+    public void getCameraPermission(){
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.VIBRATE};
+
+        if (EasyPermissions.hasPermissions(App.getContext(), perms)){
+            Intent intent = new Intent(this, ScanActivity.class);
+            startActivityForResult(intent, SCAN_REQUEST);
+        }else {
+            EasyPermissions.requestPermissions(this, "需要相机权限以扫描二维码", REQUEST_CAMERA_PERMS, perms);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SCAN_REQUEST){
+            if (resultCode == RESULT_OK){
+                if (data.getIntExtra(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED) == CodeUtils.RESULT_SUCCESS){
+                    String result = data.getStringExtra(CodeUtils.RESULT_STRING);
+                    addPresenter.addFromQRCode(result);
+//                    Toast.makeText(App.getContext(), data.getStringExtra(CodeUtils.RESULT_STRING), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(App.getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    public static void onAnalizeSuccess(String result){
+
+//        SelectedList list = JSON.parseObject(result, SelectedList.class);
+//        sharedItemList = list.getSelectedPasswordItemList();
+//        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
+        addPresenter.addFromQRCode(result);
+
+    }
+
+    public static void onAnalizeFailed(){
+        Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
+    }
+
+    public List<PasswordItem> getSharedItemList(){
+        return sharedItemList;
     }
 }
