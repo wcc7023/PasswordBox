@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     int SCAN_REQUEST = 2;
     int REQUEST_CAMERA_PERMS = 102;
     int IMAGE_REQUEST = 3;
+    int IMAGE_ANALYZED_SUCCESS = 104;
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -357,6 +358,10 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                 }else {
                     Toast.makeText(App.getContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }
+            }
+            if (resultCode == IMAGE_ANALYZED_SUCCESS){
+                String result = data.getStringExtra("result");
+                addPresenter.addFromQRCode(result);
             }
         }
     }

@@ -28,6 +28,7 @@ public class ScanActivity extends AppCompatActivity {
     private CaptureFragment captureFragment;
     public static boolean isFlashLightOpen = false;
     int IMAGE_REQUEST = 3;
+    int IMAGE_ANALYZED_SUCCESS = 104;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +93,7 @@ public class ScanActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == IMAGE_REQUEST) {
@@ -104,7 +105,10 @@ public class ScanActivity extends AppCompatActivity {
                         @Override
                         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
 //                            Toast.makeText(App.getContext(), "解析结果:" + result, Toast.LENGTH_LONG).show();
-                            MainActivity.onAnalizeSuccess(result);
+                            Intent intent = new Intent();
+                            intent.putExtra("result", result);
+                            setResult(IMAGE_ANALYZED_SUCCESS, intent);
+//                            MainActivity.onAnalizeSuccess(result);
                             finish();
                         }
 
