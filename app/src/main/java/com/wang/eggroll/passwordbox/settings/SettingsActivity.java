@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.settings;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

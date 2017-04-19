@@ -1,18 +1,11 @@
 package com.wang.eggroll.passwordbox.view;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,37 +15,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.uuzuche.lib_zxing.decoding.Intents;
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.adapter.ListViewAdapter;
 import com.wang.eggroll.passwordbox.instance.PasswordItemList;
-import com.wang.eggroll.passwordbox.instance.SelectedList;
-import com.wang.eggroll.passwordbox.model.MyOrmHelper;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.presenter.AddPresenter;
+import com.wang.eggroll.passwordbox.settings.SettingsActivity;
 import com.wang.eggroll.passwordbox.utils.DialogHelper;
-import com.wang.eggroll.passwordbox.utils.ImageHelper;
+import com.wang.eggroll.passwordbox.utils.Statics;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,11 +45,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements IAddActivity,SearchView.OnQueryTextListener,EasyPermissions.PermissionCallbacks{
 
-    int SCAN_REQUEST = 2;
-    int REQUEST_CAMERA_PERMS = 102;
-    int IMAGE_REQUEST = 3;
-    int IMAGE_ANALYZED_SUCCESS = 104;
-    int IMAGE_ANALYZED_FAILED = 105;
+
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -325,9 +305,9 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
         if (EasyPermissions.hasPermissions(App.getContext(), perms)){
             Intent intent = new Intent(this, ScanActivity.class);
-            startActivityForResult(intent, SCAN_REQUEST);
+            startActivityForResult(intent, Statics.SCAN_REQUEST);
         }else {
-            EasyPermissions.requestPermissions(this, "需要相机权限以扫描二维码", REQUEST_CAMERA_PERMS, perms);
+            EasyPermissions.requestPermissions(this, "需要相机权限以扫描二维码", Statics.REQUEST_CAMERA_PERMS, perms);
         }
     }
 
@@ -354,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SCAN_REQUEST){
+        if (requestCode == Statics.SCAN_REQUEST){
             if (resultCode == RESULT_OK){
                 if (data.getIntExtra(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED) == CodeUtils.RESULT_SUCCESS){
                     String result = data.getStringExtra(CodeUtils.RESULT_STRING);
@@ -364,11 +344,11 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                     Toast.makeText(App.getContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
-            if (resultCode == IMAGE_ANALYZED_SUCCESS){
+            if (resultCode == Statics.IMAGE_ANALYZED_SUCCESS){
                 String result = data.getStringExtra("result");
                 addPresenter.decodeQRCode(result);
             }
-            if (resultCode == IMAGE_ANALYZED_FAILED){
+            if (resultCode == Statics.IMAGE_ANALYZED_FAILED){
                 Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
             }
         }

@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.patternlock;
 
 import android.support.v7.app.AppCompatActivity;
 

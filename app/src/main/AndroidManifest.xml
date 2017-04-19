@@ -21,7 +21,7 @@
         <activity android:name=".view.ShareActivity"
             android:theme="@style/AppTheme"/>
 
-        <activity android:name=".view.ConfirmPatternActivity"
+        <activity android:name=".patternlock.ConfirmPatternActivity"
             android:theme="@style/PatternView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +29,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.SetPatternActivity"
+        <activity android:name=".patternlock.SetPatternActivity"
             android:theme="@style/PatternView"/>
-        <activity android:name=".view.ForgotPasswordActivity"/>
-        <activity android:name=".view.SettingsActivity" />
-        <activity android:name=".view.ConfirmForPwdResetActivity"
+        <activity android:name=".patternlock.ForgotPasswordActivity"/>
+        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".patternlock.ConfirmForPwdResetActivity"
             android:theme="@style/PatternView"/>
         <activity android:name=".view.ScanActivity"/>
     </application>

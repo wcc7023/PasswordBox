@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,9 @@ import android.util.Log;
 
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.R;
+import com.wang.eggroll.passwordbox.patternlock.ConfirmForPwdResetActivity;
+import com.wang.eggroll.passwordbox.patternlock.SetPatternActivity;
+import com.wang.eggroll.passwordbox.utils.Statics;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -23,13 +26,11 @@ public class SettingsFragment extends PreferenceFragment {
     SwitchPreference switchPreference;
     Preference changePasswordPreference;
 
-    int CONFIRM_OLD_PASSWORD = 101;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("confirm_result", "000");
-        if (requestCode == CONFIRM_OLD_PASSWORD){
+        if (requestCode == Statics.CONFIRM_OLD_PASSWORD){
             switch (resultCode){
                 case RESULT_CANCELED:
                     Log.e("confirm_result", "cancle");
@@ -69,7 +70,7 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(getActivity(), ConfirmForPwdResetActivity.class);
-                startActivityForResult(intent, CONFIRM_OLD_PASSWORD);
+                startActivityForResult(intent, Statics.CONFIRM_OLD_PASSWORD);
                 return true;
             }
         });

@@ -1,10 +1,11 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.patternlock;
 
 import android.widget.Toast;
 
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.presenter.IPatternPresenter;
 import com.wang.eggroll.passwordbox.presenter.PatternPresenter;
+import com.wang.eggroll.passwordbox.view.ISetPatternActivity;
 
 import java.util.List;
 

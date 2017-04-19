@@ -18,6 +18,7 @@ import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.presenter.AddPresenter;
 import com.wang.eggroll.passwordbox.presenter.IAddPresenter;
 import com.wang.eggroll.passwordbox.utils.ImageHelper;
+import com.wang.eggroll.passwordbox.utils.Statics;
 
 /**
  * Created by eggroll on 15/04/2017.
@@ -27,9 +28,7 @@ public class ScanActivity extends AppCompatActivity {
 
     private CaptureFragment captureFragment;
     public static boolean isFlashLightOpen = false;
-    int IMAGE_REQUEST = 3;
-    int IMAGE_ANALYZED_SUCCESS = 104;
-    int IMAGE_ANALYZED_FAILED = 105;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,7 @@ public class ScanActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                startActivityForResult(intent, IMAGE_REQUEST);
+                startActivityForResult(intent, Statics.IMAGE_REQUEST);
             }
         });
     }
@@ -97,7 +96,7 @@ public class ScanActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == IMAGE_REQUEST) {
+        if (requestCode == Statics.IMAGE_REQUEST) {
             if (data != null) {
                 Uri uri = data.getData();
                 try {
@@ -108,7 +107,7 @@ public class ScanActivity extends AppCompatActivity {
 //                            Toast.makeText(App.getContext(), "解析结果:" + result, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent();
                             intent.putExtra("result", result);
-                            setResult(IMAGE_ANALYZED_SUCCESS, intent);
+                            setResult(Statics.IMAGE_ANALYZED_SUCCESS, intent);
 //                            MainActivity.onAnalizeSuccess(result);
                             finish();
                         }
@@ -116,7 +115,7 @@ public class ScanActivity extends AppCompatActivity {
                         @Override
                         public void onAnalyzeFailed() {
 //                            Toast.makeText(App.getContext(), "解析二维码失败", Toast.LENGTH_LONG).show();
-                            setResult(IMAGE_ANALYZED_FAILED);
+                            setResult(Statics.IMAGE_ANALYZED_FAILED);
                             finish();
                         }
                     });

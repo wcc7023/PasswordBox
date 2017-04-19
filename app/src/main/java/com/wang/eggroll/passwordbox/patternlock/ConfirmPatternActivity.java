@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.patternlock;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.utils.MD5Helper;
+import com.wang.eggroll.passwordbox.view.MainActivity;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import me.zhanghai.android.patternlock.PatternView;
