@@ -24,6 +24,7 @@ import com.wang.eggroll.passwordbox.instance.PasswordItemList;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.presenter.ISharePresenter;
 import com.wang.eggroll.passwordbox.presenter.SharePresenter;
+import com.wang.eggroll.passwordbox.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,9 +85,10 @@ public class ShareActivity extends AppCompatActivity implements IShareActivity, 
     @Override
     public void onBarcodeCreated(Bitmap bitmap) {
         //TODO:使用fragment显示二维码
-        this.bitmap = bitmap;
-        ShareDialog shareDialog = new ShareDialog();
-        shareDialog.show(getSupportFragmentManager(), "share");
+//        this.bitmap = bitmap;
+//        ShareDialog shareDialog = new ShareDialog();
+//        shareDialog.show(getSupportFragmentManager(), "share");
+        DialogHelper.showQRCodeDialog(getSupportFragmentManager(), bitmap, this);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class ShareActivity extends AppCompatActivity implements IShareActivity, 
 
     @Override
     @AfterPermissionGranted(1)
-    public void getPermissionAndSave() {
+    public void getPermissionAndSave(Bitmap bitmap) {
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         if (EasyPermissions.hasPermissions(App.getContext(), perms)){

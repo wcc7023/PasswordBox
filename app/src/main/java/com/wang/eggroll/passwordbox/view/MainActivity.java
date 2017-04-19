@@ -49,6 +49,7 @@ import com.wang.eggroll.passwordbox.instance.SelectedList;
 import com.wang.eggroll.passwordbox.model.MyOrmHelper;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.presenter.AddPresenter;
+import com.wang.eggroll.passwordbox.utils.DialogHelper;
 import com.wang.eggroll.passwordbox.utils.ImageHelper;
 
 import java.io.Serializable;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     int REQUEST_CAMERA_PERMS = 102;
     int IMAGE_REQUEST = 3;
     int IMAGE_ANALYZED_SUCCESS = 104;
+    int IMAGE_ANALYZED_FAILED = 105;
 
     Toolbar toolbar;
     DrawerLayout drawerLayout;
@@ -92,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.btn_add:
-                        AddDialog addDialog = new AddDialog();
-                        addDialog.show(getSupportFragmentManager(), "add");
+                        DialogHelper.showAddDialog(getSupportFragmentManager(), addPresenter);
                 }
                 return true ;
             }
@@ -207,6 +208,25 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     }
 
     @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (adapter instanceof Filterable){
+            Filter filter = adapter.getFilter();
+            if (newText == null || newText.length() == 0){
+                filter.filter(null);
+            }else {
+                filter.filter(newText);
+            }
+        }
+        return true;
+    }
+
+
+    @Override
     public void onAddFailed(String resultMessage) {
         Toast.makeText(getApplicationContext(), "插入失败，" + resultMessage, Toast.LENGTH_SHORT).show();
     }
@@ -245,19 +265,22 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
     @Override
     public void onListCreated(List<PasswordItem> passwordItemList, String oldPassword) {
-        this.sharedItemList = passwordItemList;
-        this.oldPassword = oldPassword;
-        Log.e("onListCreate", this.oldPassword);
+//        this.sharedItemList = passwordItemList;
+//        this.oldPassword = oldPassword;
+//        Log.e("onListCreate", this.oldPassword);
+//
+//
+//        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
+//        dialog.show(getSupportFragmentManager(), "addFromQRCode");
+//
 
-
-        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
-        dialog.show(getSupportFragmentManager(), "addFromQRCode");
+        DialogHelper.showAddFromQRCodeDialog(getSupportFragmentManager(), addPresenter, passwordItemList, oldPassword);
     }
 
-    public String getOldPassword() {
-        Log.e("getOldPassword", oldPassword);
-        return oldPassword;
-    }
+//    public String getOldPassword() {
+//        Log.e("getOldPassword", oldPassword);
+//        return oldPassword;
+//    }
 
     public AddPresenter getAddPresenter(){
         return addPresenter;
@@ -277,9 +300,8 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
            public void onClick(DialogInterface dialog, int which) {
                switch (which){
                    case 0:
-                       currentPasswordItem = passwordItem;
-                       UpdateDialog updateDialog = new UpdateDialog();
-                       updateDialog.show(getSupportFragmentManager(), "update");
+                       DialogHelper.showModifyDialog(getSupportFragmentManager(),
+                                                        addPresenter, passwordItem);
                        break;
                    case 1:
                        addPresenter.removeItem(passwordItem);
@@ -296,23 +318,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
         super.onDestroy();
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (adapter instanceof Filterable){
-            Filter filter = adapter.getFilter();
-            if (newText == null || newText.length() == 0){
-                filter.filter(null);
-            }else {
-                filter.filter(newText);
-            }
-        }
-        return true;
-    }
 
 
     public void getCameraPermission(){
@@ -353,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
             if (resultCode == RESULT_OK){
                 if (data.getIntExtra(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED) == CodeUtils.RESULT_SUCCESS){
                     String result = data.getStringExtra(CodeUtils.RESULT_STRING);
-                    addPresenter.addFromQRCode(result);
+                    addPresenter.decodeQRCode(result);
 //                    Toast.makeText(App.getContext(), data.getStringExtra(CodeUtils.RESULT_STRING), Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(App.getContext(), "Failed", Toast.LENGTH_SHORT).show();
@@ -361,25 +366,28 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
             }
             if (resultCode == IMAGE_ANALYZED_SUCCESS){
                 String result = data.getStringExtra("result");
-                addPresenter.addFromQRCode(result);
+                addPresenter.decodeQRCode(result);
+            }
+            if (resultCode == IMAGE_ANALYZED_FAILED){
+                Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public static void onAnalizeSuccess(String result){
+//    public static void onAnalizeSuccess(String result){
+//
+////        SelectedList list = JSON.parseObject(result, SelectedList.class);
+////        sharedItemList = list.getSelectedPasswordItemList();
+////        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
+////        addPresenter.addFromQRCode(result);
+//
+//    }
+//
+//    public static void onAnalizeFailed(){
+//        Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
+//    }
 
-//        SelectedList list = JSON.parseObject(result, SelectedList.class);
-//        sharedItemList = list.getSelectedPasswordItemList();
-//        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
-        addPresenter.addFromQRCode(result);
-
-    }
-
-    public static void onAnalizeFailed(){
-        Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
-    }
-
-    public List<PasswordItem> getSharedItemList(){
-        return sharedItemList;
-    }
+//    public List<PasswordItem> getSharedItemList(){
+//        return sharedItemList;
+//    }
 }

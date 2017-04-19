@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.old;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.model.PasswordItem;
 import com.wang.eggroll.passwordbox.presenter.AddPresenter;
+import com.wang.eggroll.passwordbox.view.MainActivity;
 
 /**
  * Created by eggroll on 30/03/2017.

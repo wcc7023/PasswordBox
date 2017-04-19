@@ -29,6 +29,7 @@ public class ScanActivity extends AppCompatActivity {
     public static boolean isFlashLightOpen = false;
     int IMAGE_REQUEST = 3;
     int IMAGE_ANALYZED_SUCCESS = 104;
+    int IMAGE_ANALYZED_FAILED = 105;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +116,7 @@ public class ScanActivity extends AppCompatActivity {
                         @Override
                         public void onAnalyzeFailed() {
 //                            Toast.makeText(App.getContext(), "解析二维码失败", Toast.LENGTH_LONG).show();
-                            MainActivity.onAnalizeFailed();
+                            setResult(IMAGE_ANALYZED_FAILED);
                             finish();
                         }
                     });

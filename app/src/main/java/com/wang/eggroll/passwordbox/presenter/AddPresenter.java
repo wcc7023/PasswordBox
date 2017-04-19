@@ -101,7 +101,7 @@ public class AddPresenter implements IAddPresenter {
     }
 
     @Override
-    public void addFromQRCode(String result) {
+    public void decodeQRCode(String result) {
         SelectedList list = JSON.parseObject(result, SelectedList.class);
         List<PasswordItem> sharedItemList = list.getSelectedPasswordItemList();
         String oldPassword = list.getPassword();

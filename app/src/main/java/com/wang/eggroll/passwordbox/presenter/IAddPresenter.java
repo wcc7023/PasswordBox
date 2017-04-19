@@ -14,5 +14,5 @@ public interface IAddPresenter {
     void removeItem(PasswordItem passwordItem);
     List<PasswordItem> queryAllItem();
     void onBackFromGallery(String result);
-    void addFromQRCode(String result);
+    void decodeQRCode(String result);
 }

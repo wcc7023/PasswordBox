@@ -12,5 +12,5 @@ public interface IShareActivity {
     ShareListViewAdapter getAdapter();
     void onBarcodeCreated(Bitmap bitmap);
     Bitmap getBitmap();
-    void getPermissionAndSave();
+    void getPermissionAndSave(Bitmap bitmap);
 }
