@@ -11,6 +11,7 @@ import android.util.Log;
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.patternlock.ConfirmForPwdResetActivity;
+import com.wang.eggroll.passwordbox.patternlock.MyConfirmPatternActivity;
 import com.wang.eggroll.passwordbox.patternlock.SetPatternActivity;
 import com.wang.eggroll.passwordbox.utils.Statics;
 
@@ -69,7 +70,7 @@ public class SettingsFragment extends PreferenceFragment {
         changePasswordPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), ConfirmForPwdResetActivity.class);
+                Intent intent = new Intent(getActivity(), MyConfirmPatternActivity.class);
                 startActivityForResult(intent, Statics.CONFIRM_OLD_PASSWORD);
                 return true;
             }

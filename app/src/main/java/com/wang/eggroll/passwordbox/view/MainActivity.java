@@ -54,11 +54,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     ListView listView;
     ListViewAdapter adapter;
     static AddPresenter addPresenter;
-    PasswordItem currentPasswordItem;
     SearchView searchView;
-    List<PasswordItem> sharedItemList = new ArrayList<>();
-    String oldPassword = null;
-//    boolean isHide = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,9 +140,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
 
         PasswordItemList.getInstance().addAll(addPresenter.queryAllItem());
-//        Log.d("itemFirstInDB", MyOrmHelper.getInstance(this).queryAll().get(0).getPassword());
-
-//        passwordItemList = addPresenter.queryAllItem();
         adapter = new ListViewAdapter(PasswordItemList.getInstance());
         listView = (ListView) findViewById(R.id.pwd_list);
         listView.setAdapter(adapter);
@@ -184,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
         searchView.setOnQueryTextListener(this);
         searchView.setQueryHint("搜索");
         return true;
-//        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -238,36 +230,14 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
         Toast.makeText(this, "更改失败，" + resultMessage, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public ListViewAdapter getAdapter() {
-        return this.adapter;
-    }
+//    @Override
+//    public ListViewAdapter getAdapter() {
+//        return this.adapter;
+//    }
 
     @Override
     public void onListCreated(List<PasswordItem> passwordItemList, String oldPassword) {
-//        this.sharedItemList = passwordItemList;
-//        this.oldPassword = oldPassword;
-//        Log.e("onListCreate", this.oldPassword);
-//
-//
-//        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
-//        dialog.show(getSupportFragmentManager(), "addFromQRCode");
-//
-
         DialogHelper.showAddFromQRCodeDialog(getSupportFragmentManager(), addPresenter, passwordItemList, oldPassword);
-    }
-
-//    public String getOldPassword() {
-//        Log.e("getOldPassword", oldPassword);
-//        return oldPassword;
-//    }
-
-    public AddPresenter getAddPresenter(){
-        return addPresenter;
-    }
-
-    public PasswordItem getPasswordItem() {
-        return currentPasswordItem;
     }
 
     private void createItemSetDialog(final PasswordItem passwordItem){
@@ -299,18 +269,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     }
 
 
-
-    public void getCameraPermission(){
-        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.VIBRATE};
-
-        if (EasyPermissions.hasPermissions(App.getContext(), perms)){
-            Intent intent = new Intent(this, ScanActivity.class);
-            startActivityForResult(intent, Statics.SCAN_REQUEST);
-        }else {
-            EasyPermissions.requestPermissions(this, "需要相机权限以扫描二维码", Statics.REQUEST_CAMERA_PERMS, perms);
-        }
-    }
-
+    //以下权限相关
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -330,6 +289,19 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
         }
     }
 
+    public void getCameraPermission(){
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.VIBRATE};
+
+        if (EasyPermissions.hasPermissions(App.getContext(), perms)){
+            Intent intent = new Intent(this, ScanActivity.class);
+            startActivityForResult(intent, Statics.SCAN_REQUEST);
+        }else {
+            EasyPermissions.requestPermissions(this, "需要相机权限以扫描二维码", Statics.REQUEST_CAMERA_PERMS, perms);
+        }
+    }
+
+
+    //返回值处理
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -339,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                 if (data.getIntExtra(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED) == CodeUtils.RESULT_SUCCESS){
                     String result = data.getStringExtra(CodeUtils.RESULT_STRING);
                     addPresenter.decodeQRCode(result);
-//                    Toast.makeText(App.getContext(), data.getStringExtra(CodeUtils.RESULT_STRING), Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(App.getContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }
@@ -353,21 +324,4 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
             }
         }
     }
-
-//    public static void onAnalizeSuccess(String result){
-//
-////        SelectedList list = JSON.parseObject(result, SelectedList.class);
-////        sharedItemList = list.getSelectedPasswordItemList();
-////        AddFromQRCodeDialog dialog = new AddFromQRCodeDialog();
-////        addPresenter.addFromQRCode(result);
-//
-//    }
-//
-//    public static void onAnalizeFailed(){
-//        Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
-//    }
-
-//    public List<PasswordItem> getSharedItemList(){
-//        return sharedItemList;
-//    }
 }

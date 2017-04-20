@@ -24,4 +24,14 @@
         <item name="pl_successColor">#ff009688</item>
     </style>
 
+    <style name="MyPatternView" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="pl_aspect">square</item>
+        <item name="pl_regularColor">#ff000000</item>
+        <item name="pl_errorColor">#fff4511e</item>
+        <item name="pl_successColor">#ff009688</item>
+    </style>
+
 </resources>

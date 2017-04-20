@@ -25,40 +25,41 @@ public class UpdateDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_update, null);
-        builder.setView(view);
-
-        //TODO:passwordItem通过传值的形式进来
-        final PasswordItem currentPasswordItem = ((MainActivity)getActivity()).getPasswordItem();
-        final AddPresenter presenter = ((MainActivity)getActivity()).getAddPresenter();
-
-        final EditText itemEditText = (EditText) view.findViewById(R.id.item_update_edit_text);
-        final EditText pwdEditText = (EditText) view.findViewById(R.id.passwd_update_edit_text);
-
-        itemEditText.setText(currentPasswordItem.getItem());
-        pwdEditText.setText(currentPasswordItem.getPassword());
-
-        builder.setTitle("更改");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                PasswordItem newPasswordItem = new PasswordItem();
-                newPasswordItem.setId(currentPasswordItem.getId());
-                newPasswordItem.setItem(itemEditText.getText().toString());
-                newPasswordItem.setPassword(pwdEditText.getText().toString());
-                presenter.updateItem(newPasswordItem);
-            }
-        });
-
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        return builder.create();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        LayoutInflater inflater = getActivity().getLayoutInflater();
+//        View view = inflater.inflate(R.layout.dialog_update, null);
+//        builder.setView(view);
+//
+//        //TODO:passwordItem通过传值的形式进来
+//        final PasswordItem currentPasswordItem = ((MainActivity)getActivity()).getPasswordItem();
+//        final AddPresenter presenter = ((MainActivity)getActivity()).getAddPresenter();
+//
+//        final EditText itemEditText = (EditText) view.findViewById(R.id.item_update_edit_text);
+//        final EditText pwdEditText = (EditText) view.findViewById(R.id.passwd_update_edit_text);
+//
+//        itemEditText.setText(currentPasswordItem.getItem());
+//        pwdEditText.setText(currentPasswordItem.getPassword());
+//
+//        builder.setTitle("更改");
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                PasswordItem newPasswordItem = new PasswordItem();
+//                newPasswordItem.setId(currentPasswordItem.getId());
+//                newPasswordItem.setItem(itemEditText.getText().toString());
+//                newPasswordItem.setPassword(pwdEditText.getText().toString());
+//                presenter.updateItem(newPasswordItem);
+//            }
+//        });
+//
+//        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+//
+//        return builder.create();
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.wang.eggroll.passwordbox.view;
+package com.wang.eggroll.passwordbox.patternlock;
 
 /**
  * Created by eggroll on 12/04/2017.

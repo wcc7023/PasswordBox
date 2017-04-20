@@ -1,11 +1,11 @@
 package com.wang.eggroll.passwordbox.patternlock;
 
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.presenter.IPatternPresenter;
 import com.wang.eggroll.passwordbox.presenter.PatternPresenter;
-import com.wang.eggroll.passwordbox.view.ISetPatternActivity;
 
 import java.util.List;
 
@@ -16,7 +16,14 @@ import me.zhanghai.android.patternlock.PatternView;
  */
 
 public class SetPatternActivity extends me.zhanghai.android.patternlock.SetPatternActivity implements ISetPatternActivity {
-    IPatternPresenter patternPresenter = new PatternPresenter();
+    IPatternPresenter patternPresenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        patternPresenter =  new PatternPresenter(this);
+    }
 
     @Override
     protected void onSetPattern(List<PatternView.Cell> pattern) {

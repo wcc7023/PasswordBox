@@ -17,6 +17,6 @@ public interface IAddActivity {
     void onRemovedSuccess();
     void onUpdateSuccess();
     void onUpdateFailed(String resultMessage);
-    ListViewAdapter getAdapter();
+//    ListViewAdapter getAdapter();
     void onListCreated(List<PasswordItem> passwordItemList, String oldPassword);
 }

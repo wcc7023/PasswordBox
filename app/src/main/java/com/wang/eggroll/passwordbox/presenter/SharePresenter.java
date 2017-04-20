@@ -51,7 +51,6 @@ public class SharePresenter implements ISharePresenter {
         HashMap<Integer, Boolean> hashMap = shareActivity.getAdapter().getIsSelect();
         for (int i = 0; i < hashMap.size(); i++) {
             if (hashMap.get(i)){
-//                selectedList.add(PasswordItemList.getInstance().get(i));
                 PasswordItem temp = PasswordItemList.getInstance().get(i);
                 PasswordItem selectItem = new PasswordItem();
                 selectItem.setItem(temp.getItem());
