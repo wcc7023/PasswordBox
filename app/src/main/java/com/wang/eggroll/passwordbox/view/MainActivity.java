@@ -86,20 +86,22 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                 switch (item.getItemId()){
                     case R.id.item_scan:
                         getCameraPermission();
-                        drawerLayout.closeDrawers();
-                        return true;
+                        item.setChecked(false);
+                        break;
                     case R.id.item_share:
                         Intent intent = new Intent(MainActivity.this, ShareActivity.class);
                         startActivity(intent);
-                        drawerLayout.closeDrawers();
-                        return true;
+                        item.setChecked(false);
+                        break;
                     case R.id.item_set:
                         Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(intentSettings);
-                        drawerLayout.closeDrawers();
-                        return true;
+                        item.setChecked(false);
+                        break;
                 }
-                return false;
+                item.setChecked(false);
+                drawerLayout.closeDrawers();
+                return true;
             }
         });
 
@@ -124,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        Toast.makeText(App.getContext(), "DOWN", Toast.LENGTH_SHORT).show();
                         App.setHide(false);
                         adapter.notifyDataSetChanged();
                         break;
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
 
     @Override
     protected void onPause() {
-        Log.d("Main", "onPause");
+        Log.e("Main", "onPause");
         super.onPause();
     }
 
@@ -265,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     @Override
     protected void onDestroy() {
         PasswordItemList.getInstance().clear();
+        Log.e("Main", "onDestory");
         super.onDestroy();
     }
 
@@ -323,5 +325,12 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                 Toast.makeText(App.getContext(), "解析失败", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+
+        Log.e("Main", "onStop");
+        super.onStop();
     }
 }

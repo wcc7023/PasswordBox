@@ -71,7 +71,6 @@ public class ShareActivity extends AppCompatActivity implements IShareActivity, 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:引入rxJava
                 sharePresenter.onShareBtnClick();
             }
         });
@@ -84,10 +83,6 @@ public class ShareActivity extends AppCompatActivity implements IShareActivity, 
 
     @Override
     public void onBarcodeCreated(Bitmap bitmap) {
-        //TODO:使用fragment显示二维码
-//        this.bitmap = bitmap;
-//        ShareDialog shareDialog = new ShareDialog();
-//        shareDialog.show(getSupportFragmentManager(), "share");
         DialogHelper.showQRCodeDialog(getSupportFragmentManager(), bitmap, this);
     }
 

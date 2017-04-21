@@ -62,7 +62,6 @@ public class DialogHelper {
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO
                     }
                 });
                 return builder.create();
@@ -186,6 +185,7 @@ public class DialogHelper {
                             String passwdAfterEncrypt = passwordItem.getPassword();
                             Log.e("decryptPassword", oldPassword);
                             String passwdBeforeEncrypt = AESHelper.decrypt(passwdAfterEncrypt, oldPassword);
+                            Log.e("content", passwdBeforeEncrypt);
                             addPresenter.addToDatabase(name, passwdBeforeEncrypt);
                         }
                     }

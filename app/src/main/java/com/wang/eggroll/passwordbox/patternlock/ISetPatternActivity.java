@@ -6,4 +6,5 @@ package com.wang.eggroll.passwordbox.patternlock;
 
 public interface ISetPatternActivity {
     void savePatternSuccess();
+    void resetPatternSuccess();
 }
