@@ -21,6 +21,7 @@ public class ConfirmPatternActivity extends me.zhanghai.android.patternlock.Conf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.addActivity(this);
 
         if (App.getSharedPreferences().getString("PASSWORD", "NULL") == "NULL"){
             Intent intent = new Intent(this, SetPatternActivity.class);

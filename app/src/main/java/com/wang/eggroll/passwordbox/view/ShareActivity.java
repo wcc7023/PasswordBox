@@ -48,6 +48,7 @@ public class ShareActivity extends AppCompatActivity implements IShareActivity, 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.addActivity(this);
 
         final ISharePresenter sharePresenter = new SharePresenter(this);
 

@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.wang.eggroll.passwordbox.App;
 import com.wang.eggroll.passwordbox.R;
 import com.wang.eggroll.passwordbox.utils.Statics;
 
@@ -34,6 +35,7 @@ public class MyBasePatternActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_my_base_pattern_view);
+        App.addActivity(this);
 
         patternView = (PatternView) findViewById(R.id.my_base_pattern_view);
         textView = (TextView) findViewById(R.id.my_base_pattern_text);

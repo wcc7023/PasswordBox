@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        App.addActivity(this);
 
         addPresenter = new AddPresenter(getApplicationContext(), this);
 
@@ -86,20 +87,16 @@ public class MainActivity extends AppCompatActivity implements IAddActivity,Sear
                 switch (item.getItemId()){
                     case R.id.item_scan:
                         getCameraPermission();
-                        item.setChecked(false);
                         break;
                     case R.id.item_share:
                         Intent intent = new Intent(MainActivity.this, ShareActivity.class);
                         startActivity(intent);
-                        item.setChecked(false);
                         break;
                     case R.id.item_set:
                         Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(intentSettings);
-                        item.setChecked(false);
                         break;
                 }
-                item.setChecked(false);
                 drawerLayout.closeDrawers();
                 return true;
             }

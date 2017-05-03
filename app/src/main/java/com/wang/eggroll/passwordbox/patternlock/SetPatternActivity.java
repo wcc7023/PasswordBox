@@ -28,6 +28,7 @@ public class SetPatternActivity extends me.zhanghai.android.patternlock.SetPatte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.addActivity(this);
 
         patternPresenter =  new PatternPresenter(this);
     }
@@ -47,6 +48,9 @@ public class SetPatternActivity extends me.zhanghai.android.patternlock.SetPatte
     @Override
     public void resetPatternSuccess() {
         Log.e("resetPassword", "success");
-        System.exit(0);
+        Intent i = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }

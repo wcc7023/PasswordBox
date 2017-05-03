@@ -21,6 +21,7 @@ public class ConfirmForPwdResetActivity extends ConfirmPatternActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.addActivity(this);
     }
 
     @Override

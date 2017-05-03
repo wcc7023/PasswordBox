@@ -24,6 +24,7 @@ public class MyConfirmPatternActivity extends MyBasePatternActivity implements P
         super.onCreate(savedInstanceState);
         textView.setText("请校验旧密码");
         patternView.setOnPatternListener(this);
+        App.addActivity(this);
     }
 
     @Override
